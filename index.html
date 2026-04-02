@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PBrandino Estruturas Metálicas</title>
+    <meta name="description" content="Especialistas em construção e montagem de estruturas metálicas de alta performance.">
+    <link rel="stylesheet" href="style.css">
+    
+    <!-- Fonte moderna e forte do Google Fonts (Outfit) -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;500;800;900&display=swap" rel="stylesheet">
+    
+    <!-- GSAP: Biblioteca para criar animações de entrada suaves -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <!-- Vanilla Tilt para o efeito 3D nos cartões ao passar o mouse -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.8.0/vanilla-tilt.min.js"></script>
+    
+    <!-- Swiper JS e CSS para o Carrossel Infinito -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.css" />
+    <script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js"></script>
+    
+    <!-- Lucide Icons (Ícones modernos padrão do mercado) -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body>
+    <!-- Esta tag "canvas" é a tela de pintura invisível onde o JavaScript vai desenhar nossas fagulhas -->
+    <canvas id="sparksCanvas"></canvas>
+
+    <!-- Cabeçalho de Navegação -->
+    <header class="navbar">
+        <div class="logo" style="font-size: 22px;">PBrandino<span> Estruturas Metálicas</span></div>
+        <nav>
+            <ul>
+                <li><a href="#inicio">Início</a></li>
+                <li><a href="#sobre">Quem Somos</a></li>
+                <li><a href="#servicos">Serviços</a></li>
+                <li><a href="#contato" class="btn-primary">Solicitar Orçamento</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Seção Principal (Banner inicial) -->
+    <main class="hero" id="inicio">
+        
+        <!-- Conteúdo Textual à Esquerda -->
+        <div class="hero-content">
+            <h1>FORJANDO O<br><span>FUTURO</span></h1>
+            <p>Engenharia de ponta, força e precisão. Construímos estruturas metálicas que desafiam o tempo e dão suporte aos maiores projetos do país.</p>
+            <a href="#contato" class="btn-hero">Fale com um Engenheiro</a>
+        </div>
+        
+        <!-- A silhueta do Soldador à Direita -->
+        <div class="welder-silhouette"></div>
+
+    </main>
+
+    <!-- Seção Quem Somos -->
+    <section class="about" id="sobre">
+        <div class="about-container">
+            <div class="about-text">
+                <h2>PBrandino Estruturas Metálicas:<br><span>Soluções Completas de Serralheria e Engenharia.</span></h2>
+                <p>Há mais de 20 anos transformando metal em soluções seguras para Indústrias, Comércios e Residências. Executamos todo tipo de serviço de serralheria, desde portões e grades até estruturas metálicas complexas, mezaninos e galpões.</p>
+                <p><strong>Por que nos escolher?</strong> Atendimento especializado para engenheiros e construtoras. Experiência comprovada com vasta clientela satisfeita. Precisão, força e acabamento de alto padrão. Localizados em São Paulo, estamos prontos para tirar seu projeto do papel atendendo todas as regiões.</p>
+                <p class="highlight-text">Forjando o futuro com solidez e segurança.</p>
+                <a href="#contato" class="btn-primary">Peça seu orçamento!</a>
+            </div>
+            <div class="about-image">
+                <div class="image-wrapper" style="display: flex; min-height: 450px;">
+                    <!-- Vídeo rodando em loop e no automático sem som -->
+                    <video autoplay loop muted playsinline style="width: 100%; height: 100%; object-fit: cover; min-height: 450px;" src="video-sobre.mp4">
+                        Seu navegador não suporta vídeos.
+                    </video>
+                </div>
+                <!-- Mini card de anos de experiência flutuante sobre a imagem -->
+                <div class="experience-badge">
+                    <span class="number">20</span>
+                    <span class="text">Anos de<br>Tradição</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Seção de Serviços -->
+    <section class="services" id="servicos">
+        <div class="section-header">
+            <h2>Nossas<br><span>Especialidades</span></h2>
+            <p>Soluções em aço e ferro projetadas para máxima eficiência e segurança estrutural.</p>
+        </div>
+        
+        <div class="services-grid">
+            <div class="service-card">
+                <div class="service-icon">🏗️</div>
+                <h3>Galpões Industriais</h3>
+                <p>Estruturas robustas perfeitas para grandes demandas de indústrias e galpões logísticos, com grandes vãos livres.</p>
+                <div class="service-hover-line"></div>
+            </div>
+            
+            <div class="service-card">
+                <div class="service-icon">🏢</div>
+                <h3>Mezaninos e Plataformas</h3>
+                <p>Multiplique sua área útil de fábrica ou comércio com estruturas sob medida projetadas para suportar altas cargas tracionadas.</p>
+                <div class="service-hover-line"></div>
+            </div>
+            
+            <div class="service-card">
+                <div class="service-icon">🏠</div>
+                <h3>Coberturas Metálicas</h3>
+                <p>Sistemas de teto para projetos residenciais e comerciais avançados, resistindo às intempéries com precisão na vedação.</p>
+                <div class="service-hover-line"></div>
+            </div>
+            
+            <div class="service-card">
+                <div class="service-icon">✨</div>
+                <h3>Serralheria Fina</h3>
+                <p>Acabamentos impecáveis em aço aparente, escadas flutuantes e itens arquitetônicos que exigem perfeição estética.</p>
+                <div class="service-hover-line"></div>
+            </div>
+        </div>
+    </section>
+
+
+
+
+    <!-- Seção de Depoimentos -->
+    <section class="testimonials" id="depoimentos">
+        <div class="section-header">
+            <h2>O Que Dizem<br><span>Nossos Clientes</span></h2>
+            <p>A força da PBrandino está na confiança que construímos e nas parcerias de longo prazo.</p>
+            
+            <div class="google-rating-badge">
+                <div class="g-icon">
+                    <svg viewBox="0 0 48 48" width="32px" height="32px"><path fill="#FFC107" d="M43.611,20.083H42V20H24v8h11.303c-1.649,4.657-6.08,8-11.303,8c-6.627,0-12-5.373-12-12c0-6.627,5.373-12,12-12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C12.955,4,4,12.955,4,24c0,11.045,8.955,20,20,20c11.045,0,20-8.955,20-20C44,22.659,43.862,21.35,43.611,20.083z"/><path fill="#FF3D00" d="M6.306,14.691l6.571,4.819C14.655,15.108,18.961,12,24,12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C16.318,4,9.656,8.337,6.306,14.691z"/><path fill="#4CAF50" d="M24,44c5.166,0,9.86-1.977,13.409-5.192l-6.19-5.238C29.211,35.091,26.715,36,24,36c-5.202,0-9.619-3.317-11.283-7.946l-6.522,5.025C9.505,39.556,16.227,44,24,44z"/><path fill="#1976D2" d="M43.611,20.083H42V20H24v8h11.303c-0.792,2.237-2.231,4.166-4.087,5.571c0.001-0.001,0.002-0.001,0.003-0.002l6.19,5.238C36.971,39.205,44,34,44,24C44,22.659,43.862,21.35,43.611,20.083z"/></svg>
+                </div>
+                <div class="g-rating-info">
+                    <span class="score">4,8</span>
+                    <span class="stars">★★★★★</span>
+                </div>
+                <div class="g-reviews-text">
+                    <a href="https://www.google.com/search?q=pbrandino+estruturas+metalicas+perto+de+mim" target="_blank">4 avaliações no Google</a>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Container do Swiper Carrossel -->
+        <div class="swiper testimonials-swiper">
+            <div class="swiper-wrapper">
+                
+                <div class="swiper-slide">
+                    <div class="test-card">
+                        <div class="stars">★★★★★</div>
+                        <p class="quote">"Contratei a PBrandino para a execução de um galpão industrial e a precisão técnica foi impressionante. Entrega no prazo e estrutura extremamente robusta. Recomendo para quem busca seriedade em grandes obras."</p>
+                        <div class="client-info">
+                            <strong>Ricardo Menezes</strong>
+                            <span>Diretor Industrial</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="swiper-slide">
+                    <div class="test-card">
+                        <div class="stars">★★★★★</div>
+                        <p class="quote">"Como engenheiro, prezo pelo rigor das normas técnicas. A equipe da PBrandino fala a nossa língua e executa projetos complexos com facilidade. É o tipo de parceiro que não traz problemas, traz soluções."</p>
+                        <div class="client-info">
+                            <strong>Eng. Marcos Vinícius</strong>
+                            <span>Projetista</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="swiper-slide">
+                    <div class="test-card">
+                        <div class="stars">★★★★★</div>
+                        <p class="quote">"Fizemos um mezanino para o nosso estoque comercial e o acabamento ficou impecável. Empresa com muita tradição, nota-se a experiência de décadas no cuidado com a solda e a pintura. Ótimo custo-benefício."</p>
+                        <div class="client-info">
+                            <strong>Alessandra Souza</strong>
+                            <span>Proprietária de Comércio</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="swiper-slide">
+                    <div class="test-card">
+                        <div class="stars">★★★★★</div>
+                        <p class="quote">"Fiquei muito satisfeita com os portões e grades da minha casa. Além de bonitos, passam muita segurança. O atendimento foi direto e muito transparente. Dá para ver que entendem tudo de ferro e aço."</p>
+                        <div class="client-info">
+                            <strong>Cláudia Ferreira</strong>
+                            <span>Cliente Residencial</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="swiper-slide">
+                    <div class="test-card">
+                        <div class="stars">★★★★★</div>
+                        <p class="quote">"Já conhecia a fama da PBrandino por indicação de amigos e comprovei a qualidade. Profissionais de confiança, honestos no orçamento e com uma mão de obra muito qualificada. Vale cada centavo investido."</p>
+                        <div class="client-info">
+                            <strong>José Roberto</strong>
+                            <span>Cliente de Longa Data</span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <!-- Paginação do Carrossel (Bolinhas laranjas) -->
+            <div class="swiper-pagination"></div>
+        </div>
+    </section>
+
+    <!-- Rodapé e Contatos (Final) -->
+    <footer class="footer-section" id="contato">
+        <div class="footer-container">
+            <div class="footer-info">
+                <h2>Pronto para tirar seu<br>projeto do papel?</h2>
+                <p>Entre em contato com a nossa equipe técnica hoje mesmo e vamos assinar em conjunto a estrutura ideal e hiper durável para a sua obra.</p>
+                <br>
+                <div class="contact-item">
+                    <i data-lucide="phone"></i>
+                    <div>
+                        <strong>Ligue agora</strong>
+                        <span>(11) 98193-4601</span>
+                    </div>
+                </div>
+                <div class="contact-item">
+                    <i data-lucide="mail"></i>
+                    <div>
+                        <strong>E-mail</strong>
+                        <span><a href="mailto:paulobrandino@yahoo.com.br" style="color: #fff; text-decoration: none;">paulobrandino@yahoo.com.br</a></span>
+                    </div>
+                </div>
+                <div class="contact-item">
+                    <i data-lucide="map-pin"></i>
+                    <div>
+                        <strong>Sede</strong>
+                        <span>São Paulo - SP</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="footer-form">
+                <form action="mailto:paulobrandino@yahoo.com.br" method="POST" enctype="text/plain" class="contact-form">
+                    <h3>Solicitar um Orçamento Técnico</h3>
+                    <input type="text" name="nome" placeholder="Seu Nome ou Nome da Empresa" required>
+                    <input type="email" name="email" placeholder="E-mail" required>
+                    <input type="tel" name="telefone" placeholder="Seu WhatsApp" required>
+                    <textarea name="mensagem" rows="4" placeholder="Detalhes da sua obra (Ex: Galpão logístico, escada de incêndio, telhado...)" required></textarea>
+                    <button type="submit" class="btn-primary btn-submit">ENVIAR PROJETO PARA AVALIAÇÃO</button>
+                </form>
+            </div>
+        </div>
+        
+        <div class="footer-seo">
+            <div class="seo-tags">
+                <span>Fabricação de estruturas metálicas para telhados em SP</span>
+                <span>Instalação de telha sanduíche preço m²</span>
+                <span>Serralheria especializada em calhas e rufos industriais</span>
+            </div>
+            <div class="copyright">
+                <p>&copy; 2026 PBrandino Estruturas Metálicas. Todos os direitos reservados. Feito com engenharia de ponta.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Botão Flutuante do WhatsApp -->
+    <a href="https://wa.me/5511981934601?text=Ol%C3%A1,%20gostaria%20de%20solicitar%20um%20or%C3%A7amento%20t%C3%A9cnico." class="whatsapp-float" target="_blank" rel="noopener noreferrer">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" width="35" height="35" fill="#FFF"><path d="M380.9 97.1C339 55.1 283.2 32 223.9 32c-122.4 0-222 99.6-222 222 0 39.1 10.2 77.3 29.6 111L0 480l117.7-30.9c32.4 17.7 68.9 27 106.1 27h.1c122.3 0 224.1-99.6 224.1-222 0-59.3-25.2-115-67.1-157zM223.9 414.5c-32 0-64.3-8.5-92.4-24.6l-6.6-3.9-68.7 18 18.3-67-4.3-6.8c-18.1-28.5-27.6-61.9-27.6-96.1 0-98.3 80-178.4 178.6-178.4 47.6 0 92.4 18.6 126 52.2 33.7 33.6 52.2 78.4 52.2 126.1-.1 98.4-80.1 178.5-178.5 178.5zm98-134.1c-5.4-2.7-31.9-15.7-36.8-17.5-4.9-1.8-8.5-2.7-12.1 2.7-3.6 5.4-14.1 17.5-17 21-3.2 4-6.4 4.5-11.8 1.8-5.4-2.7-22.8-8.4-43.5-26.9-16.1-14.4-27-32.2-30.6-37.6-3.6-5.4-.4-8.3 2.3-11 2.2-2.2 5.4-6.3 8.1-9.4 2.7-3.1 3.6-5.4 5.4-9 1.8-3.6.9-6.7-.4-9.4-1.3-2.7-12.1-29.2-16.6-40-4.4-10.4-8.8-9-12.1-9.1-3.1-.1-6.7-.1-10.3-.1-3.6 0-9.4 1.3-14.3 6.7-4.9 5.4-18.8 18.4-18.8 44.9s19.3 52.1 21.9 55.6c2.7 3.6 37.9 57.9 91.9 81.2 12.8 5.6 22.9 8.9 30.7 11.4 12.9 4.1 24.6 3.5 33.8 2.1 10.3-1.6 31.9-13 36.4-25.6 4.4-12.6 4.4-23.4 3.1-25.6-1.5-2.2-5.1-3.5-10.5-6.2z"/></svg>
+    </a>
+
+    <!-- O nosso script que controla as animações -->
+    <script src="script.js"></script>
+</body>
+</html>

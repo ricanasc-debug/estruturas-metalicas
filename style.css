@@ -1,0 +1,1012 @@
+/* 
+   Configurações gerais de cores para mantermos um padrão! 
+   Estamos usando tons muito escuros para destacar o brilho da solda (laranja/amarelo).
+*/
+:root {
+    --bg-color: #2b2d31; /* Cinza chumbo */
+    --text-main: #f2f2f2;
+    --primary-color: #ff5c00; /* Laranja fogo intenso */
+    --secondary-color: #ff9d00; /* Amarelo brasa */
+    --font-family: 'Outfit', sans-serif;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body, html {
+    width: 100%;
+    min-height: 100vh;
+    background-color: var(--bg-color);
+    color: var(--text-main);
+    font-family: var(--font-family);
+    overflow-x: hidden; /* Evita apenas a barra horizontal, permite rolar para baixo */
+}
+
+/* O Canvas é onde as fagulhas são desenhadas. Ele fica atrás de tudo (z-index baixo) */
+#sparksCanvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 10;
+}
+
+/* BARRA DE NAVEGAÇÃO SUPERIOR */
+.navbar {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    padding: 25px 60px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 100; /* Nível 100, para ficar bem na frente e nunca sumir */
+    background: linear-gradient(to bottom, rgba(43, 45, 49, 0.95) 0%, rgba(43, 45, 49, 0) 100%);
+}
+
+.logo {
+    font-size: 28px;
+    font-weight: 900;
+    letter-spacing: 2px;
+}
+
+.logo span {
+    color: var(--primary-color);
+}
+
+.navbar ul {
+    list-style: none;
+    display: flex;
+    gap: 40px;
+    align-items: center;
+}
+
+.navbar a {
+    text-decoration: none;
+    color: #b3b3b3;
+    font-weight: 500;
+    font-size: 15px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    transition: color 0.3s ease;
+}
+
+.navbar a:hover {
+    color: var(--primary-color);
+}
+
+/* Botão em destaque no menu */
+.btn-primary {
+    background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+    padding: 12px 25px;
+    border-radius: 4px;
+    color: #fff !important;
+    font-weight: 800 !important;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.btn-primary:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 25px rgba(255, 92, 0, 0.5);
+}
+
+/* BANNER PRINCIPAL (HERO) */
+.hero {
+    position: relative;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    padding: 0 60px;
+    z-index: 10;
+}
+
+/* Caixa com os textos à esquerda */
+.hero-content {
+    max-width: 650px;
+    z-index: 20;
+    margin-top: -50px;
+}
+
+.hero-content h1 {
+    font-size: 85px;
+    line-height: 1;
+    font-weight: 900;
+    text-transform: uppercase;
+    margin-bottom: 30px;
+    letter-spacing: -2px;
+}
+
+.hero-content h1 span {
+    color: transparent;
+    -webkit-text-stroke: 2px var(--primary-color); /* Efeito vazado na palavra FUTURO */
+    background: url('https://images.unsplash.com/photo-1542382156-3932be432742?auto=format&fit=crop&w=400&q=80'); /* Textura sutil metálica */
+    -webkit-background-clip: text;
+    background-clip: text;
+    animation: pulseGlow 3s infinite alternate;
+}
+
+/* Animação que faz a palavra pulsar como metal derretido */
+@keyframes pulseGlow {
+    0% { text-shadow: 0 0 10px rgba(255, 92, 0, 0.2); }
+    100% { text-shadow: 0 0 30px rgba(255, 92, 0, 0.8), 0 0 50px rgba(255, 157, 0, 0.5); }
+}
+
+.hero-content p {
+    font-size: 18px;
+    line-height: 1.6;
+    color: #a0a0a0;
+    margin-bottom: 40px;
+    font-weight: 300;
+    max-width: 500px;
+}
+
+/* Botão grande de ação no banner */
+.btn-hero {
+    display: inline-block;
+    padding: 16px 40px;
+    background: transparent;
+    border: 2px solid var(--primary-color);
+    color: var(--primary-color);
+    text-decoration: none;
+    font-weight: 800;
+    font-size: 16px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    border-radius: 4px;
+    transition: all 0.4s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Efeito de preenchimento ao passar o mouse */
+.btn-hero::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+    transition: left 0.4s ease;
+    z-index: -1;
+}
+
+.btn-hero:hover::before {
+    left: 0;
+}
+
+.btn-hero:hover {
+    color: #fff;
+    box-shadow: 0 0 30px rgba(255, 92, 0, 0.6);
+    border-color: transparent;
+}
+
+/* SILHUETA DO SOLDADOR */
+.welder-silhouette {
+    position: absolute;
+    bottom: -50px;
+    right: 5%;
+    width: 700px;
+    height: 800px;
+    /* Aqui usamos uma foto real de faíscas que vai se misturar com nossa animação de fundo perfeitamente. */
+    background: url('https://images.unsplash.com/photo-1549488344-c6f3d91ae0b3?auto=format&fit=crop&w=800&q=80') no-repeat right bottom;
+    background-size: cover;
+    
+    /* mix-blend-mode é uma mágica do CSS: ela tira o fundo da imagem e deixa apenas os brilhos altos, como num modo de mesclagem do Photoshop! */
+    mix-blend-mode: lighten; 
+    opacity: 0.85;
+    z-index: 5;
+    
+    /* Um degradê sobreposto na imagem para escurecer o lado esquerdo dela, mesclando ao fundo */
+    -webkit-mask-image: linear-gradient(to right, transparent 0%, black 40%);
+    mask-image: linear-gradient(to right, transparent 0%, black 40%);
+}
+
+/* SEÇÃO: QUEM SOMOS */
+.about {
+    padding: 120px 60px;
+    background-color: var(--bg-color); /* Fundo fluido que continua a página inicial */
+    position: relative;
+    z-index: 20;
+}
+
+.about-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    gap: 80px;
+}
+
+.about-text {
+    flex: 1;
+}
+
+.about-text h2 {
+    font-size: 42px;
+    line-height: 1.2;
+    margin-bottom: 25px;
+    font-weight: 800;
+}
+
+.about-text h2 span {
+    color: var(--primary-color);
+}
+
+.about-text p {
+    font-size: 17px;
+    line-height: 1.6;
+    color: #b0b0b0;
+    margin-bottom: 20px;
+}
+
+.about-text .highlight-text {
+    font-size: 19px;
+    font-weight: 600;
+    color: #fff;
+    border-left: 4px solid var(--primary-color); /* Uma barra laranja ao lado do texto de destaque */
+    padding-left: 15px;
+    margin: 30px 0;
+}
+
+.about-image {
+    flex: 1;
+    position: relative;
+}
+
+.image-wrapper {
+    position: relative;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.6);
+    background-color: #1a1b1e;
+    min-height: 400px;
+}
+
+.image-wrapper img {
+    width: 100%;
+    display: block;
+    transition: transform 0.5s ease;
+}
+
+/* Dá um zoom suave na imagem quando passa o mouse nela */
+.image-wrapper:hover img {
+    transform: scale(1.05);
+}
+
+/* Plaquinha flutuante avisando sobre os 20 anos */
+.experience-badge {
+    position: absolute;
+    bottom: -30px;
+    left: -30px;
+    background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+    padding: 20px 30px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    box-shadow: 0 10px 20px rgba(255, 92, 0, 0.4);
+}
+
+.experience-badge .number {
+    font-size: 48px;
+    font-weight: 900;
+    color: #fff;
+    line-height: 1;
+}
+
+.experience-badge .text {
+    font-size: 16px;
+    font-weight: 700;
+    color: #fff;
+    text-transform: uppercase;
+}
+
+/* SEÇÃO: SERVIÇOS */
+.services {
+    padding: 120px 60px;
+    background-color: var(--bg-color);
+    position: relative;
+    z-index: 20;
+    border-top: 1px solid rgba(255, 255, 255, 0.05); /* Separação sutil da parte de cima */
+}
+
+.services-grid {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 40px;
+}
+
+.service-card {
+    background: #111113; /* Cartão ligeiramente mais escuro que o chumbo base */
+    padding: 40px 30px;
+    border-radius: 8px;
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.4s ease, box-shadow 0.4s ease;
+}
+
+.service-card:hover {
+    box-shadow: 0 20px 40px rgba(0,0,0,0.8);
+}
+
+.service-icon {
+    font-size: 45px;
+    margin-bottom: 25px;
+    display: inline-block;
+    text-shadow: 0 0 15px rgba(255, 92, 0, 0.5); /* Efeito de luz laranja no ícone */
+    transition: transform 0.3s ease;
+}
+
+.service-card:hover .service-icon {
+    transform: scale(1.15) rotate(5deg);
+}
+
+.service-card h3 {
+    font-size: 22px;
+    color: #fff;
+    margin-bottom: 15px;
+    font-weight: 700;
+}
+
+.service-card p {
+    font-size: 15px;
+    color: #888;
+    line-height: 1.6;
+}
+
+/* Um traço laranja brilhoso que desliza no rodapé do cartão quando o mouse passa */
+.service-hover-line {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    height: 4px;
+    background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+    transition: width 0.4s ease;
+}
+
+.service-card:hover .service-hover-line {
+    width: 100%;
+}
+
+/* SEÇÃO: DEPOIMENTOS */
+.testimonials {
+    padding: 120px 60px;
+    background: linear-gradient(135deg, #1a1b1e 0%, #0a0a0c 100%);
+    position: relative;
+    z-index: 20;
+}
+
+.section-header {
+    text-align: center;
+    margin-bottom: 60px;
+}
+
+.section-header h2 {
+    font-size: 42px;
+    font-weight: 900;
+    line-height: 1.2;
+    margin-bottom: 15px;
+    text-transform: uppercase;
+}
+
+.section-header h2 span {
+    color: var(--primary-color);
+}
+
+.section-header p {
+    color: #a0a0a0;
+    font-size: 18px;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+/* Google Rating Badge */
+.google-rating-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 15px;
+    background: rgba(255, 255, 255, 0.05);
+    padding: 10px 25px;
+    border-radius: 50px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    margin-top: 25px;
+    backdrop-filter: blur(10px);
+    transition: all 0.3s ease;
+}
+
+.google-rating-badge:hover {
+    border-color: rgba(255, 255, 255, 0.2);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    transform: translateY(-2px);
+}
+
+.google-rating-badge .g-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.google-rating-badge .g-rating-info {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.google-rating-badge .g-rating-info .score {
+    font-size: 1.8rem;
+    font-weight: 900;
+    color: #fff;
+    line-height: 1;
+}
+
+.google-rating-badge .g-rating-info .stars {
+    color: #FFC107;
+    font-size: 1.2rem;
+    letter-spacing: 2px;
+}
+
+.google-rating-badge .g-reviews-text a {
+    color: #ccc;
+    font-size: 0.95rem;
+    text-decoration: none;
+    transition: color 0.3s;
+    border-left: 1px solid rgba(255,255,255,0.2);
+    padding-left: 15px;
+}
+
+.google-rating-badge .g-reviews-text a:hover {
+    color: #fff;
+    text-decoration: underline;
+}
+
+.testimonials-swiper {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding-bottom: 60px; /* Espaço para as bolinhas de paginação do Swiper */
+    overflow: hidden; /* Oculta os itens que estão fora do carrossel */
+}
+
+/* Tamanho fixo para cada cartão ficar bonito no carrosel continuo */
+.swiper-slide {
+    width: 380px; 
+    height: auto;
+    display: flex;
+}
+
+.test-card {
+    width: 100%;
+    /* Estilo Glassmorphism (Vidro fosco esmerilhado) */
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 92, 0, 0.1);
+    padding: 40px 30px;
+    border-radius: 12px;
+    transition: all 0.4s ease;
+    backdrop-filter: blur(10px);
+    display: flex;
+    flex-direction: column;
+}
+
+/* Quando passa o mouse, o card sobe, ilumina embaixo e a borda acende alaranjada */
+.test-card:hover {
+    border-color: var(--primary-color);
+    box-shadow: 0 15px 30px rgba(255, 92, 0, 0.15);
+}
+
+.stars {
+    color: var(--secondary-color);
+    font-size: 24px;
+    letter-spacing: 2px;
+    margin-bottom: 20px;
+}
+
+.quote {
+    font-size: 16px;
+    line-height: 1.7;
+    color: #d0d0d0;
+    font-style: italic;
+    margin-bottom: 30px;
+    flex-grow: 1; /* Força o autor do depoimento a ficar preso no rodapé do card */
+}
+
+.client-info strong {
+    display: block;
+    font-size: 18px;
+    color: #fff;
+    margin-bottom: 5px;
+}
+
+.client-info span {
+    font-size: 14px;
+    color: var(--primary-color);
+}
+
+/* Configurações visuais do Carrossel Swiper */
+.swiper-pagination-bullet {
+    background: #555 !important;
+    opacity: 1 !important;
+}
+.swiper-pagination-bullet-active {
+    background: var(--primary-color) !important;
+    width: 25px !important;
+    border-radius: 5px !important;
+    transition: width 0.3s ease !important;
+}
+
+/* SEÇÃO: BENEFÍCIOS (GALPÃO) */
+.benefits {
+    padding: 120px 60px;
+    background-color: #070709; /* Mais escuro para contraste violento com as fotos */
+    position: relative;
+    z-index: 20;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.benefits-header {
+    text-align: center;
+    margin-bottom: 70px;
+}
+
+.benefits-header h2 {
+    font-size: 40px;
+    font-weight: 900;
+    line-height: 1.2;
+    margin-bottom: 15px;
+    text-transform: uppercase;
+}
+
+.benefits-header h2 span {
+    color: var(--primary-color);
+}
+
+.benefits-header p {
+    color: #a0a0a0;
+    font-size: 20px;
+}
+
+.benefits-grid {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 30px;
+    margin-bottom: 80px;
+}
+
+.benefit-card {
+    position: relative;
+    padding: 50px 40px;
+    border-radius: 12px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    min-height: 420px;
+    transition: transform 0.4s ease, box-shadow 0.4s ease, border-color 0.4s ease;
+    border: 1px solid rgba(255, 92, 0, 0.1);
+}
+
+/* O gradiente fica por cima da foto de fundo escurecendo quase tudo para o texto brilhar e a foto ficar de fundo */
+.benefit-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: linear-gradient(to top, rgba(10,10,12,0.98) 20%, rgba(10,10,12,0.4) 100%);
+    z-index: 1;
+    transition: background 0.5s ease;
+}
+
+.benefit-card:hover {
+    box-shadow: 0 15px 30px rgba(255, 92, 0, 0.3);
+    border-color: var(--primary-color);
+}
+
+/* Quando passa o mouse, a fumaça preta clareia revelando a foto de trás da textura */
+.benefit-card:hover::before {
+    background: linear-gradient(to top, rgba(10,10,12,0.9) 20%, rgba(255,92,0,0.1) 100%);
+}
+
+/* Fotos de Galpões exclusivas (sem repetição) */
+.bg-speed { background: url('https://images.unsplash.com/photo-1508450859948-4e04fabaa4ea?auto=format&fit=crop&w=600&q=80') center/cover; }
+.bg-cost { background: url('https://images.unsplash.com/photo-1586528116311-ad8ed7c80a30?auto=format&fit=crop&w=600&q=80') center/cover; }
+.bg-freedom { background: url('https://images.unsplash.com/photo-1587293852726-70cdb56c2866?auto=format&fit=crop&w=600&q=80') center/cover; }
+.bg-clean { background: url('https://images.unsplash.com/photo-1533422902779-facd85888a75?auto=format&fit=crop&w=600&q=80') center/cover; }
+.bg-modern { background: url('https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=600&q=80') center/cover; }
+.bg-space { background: url('https://images.unsplash.com/photo-1605374465223-1d01f11e9f19?auto=format&fit=crop&w=600&q=80') center/cover; }
+
+.b-icon {
+    position: relative;
+    z-index: 2;
+    color: var(--primary-color);
+    width: 48px;
+    height: 48px;
+    margin-bottom: 25px;
+    filter: drop-shadow(0 0 10px rgba(255, 92, 0, 0.5));
+}
+
+.benefit-card h3 {
+    position: relative;
+    z-index: 2;
+    color: #fff;
+    font-size: 24px;
+    font-weight: 800;
+    margin-bottom: 15px;
+}
+
+.benefit-card p {
+    position: relative;
+    z-index: 2;
+    color: #c0c0c0;
+    font-size: 15px;
+    line-height: 1.6;
+}
+
+.benefits-footer {
+    text-align: center;
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.final-phrase {
+    color: #fff;
+    font-size: 22px;
+    font-weight: 300;
+    font-style: italic;
+    margin-bottom: 40px;
+    line-height: 1.6;
+    border-left: 4px solid var(--primary-color);
+    padding-left: 20px;
+    text-align: left;
+    display: inline-block;
+}
+
+/* O CTA Gigante de baixo */
+.btn-large {
+    font-size: 16px !important;
+    padding: 18px 45px !important;
+    letter-spacing: 2px !important;
+    display: inline-block;
+}
+
+/* SEÇÃO: MEZANINOS */
+.mezaninos {
+    padding: 120px 60px;
+    background-color: #0b0b0e; /* Um cinza muito escuro ligeiramente diferente para quebrar o ritmo de cor */
+    position: relative;
+    z-index: 20;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.mezaninos-grid {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: grid;
+    /* 2 colunas grandes para focar bem nos 4 itens de mezanino */
+    grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+    gap: 40px;
+    margin-bottom: 60px;
+}
+
+/* Fotos de Mezaninos exclusivas */
+.bg-mez-1 { background: url('https://images.unsplash.com/photo-1553413002-9c95d852fd15?auto=format&fit=crop&w=800&q=80') center/cover; }
+.bg-mez-2 { background: url('https://images.unsplash.com/photo-1497215728101-856f4ea42174?auto=format&fit=crop&w=800&q=80') center/cover; }
+.bg-mez-3 { background: url('https://images.unsplash.com/photo-1541888086438-7bb735741fbd?auto=format&fit=crop&w=800&q=80') center/cover; }
+.bg-mez-4 { background: url('https://images.unsplash.com/photo-1504307651254-35680f356dfd?auto=format&fit=crop&w=800&q=80') center/cover; }
+
+.mezaninos-applications {
+    max-width: 900px;
+    margin: 0 auto;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 92, 0, 0.1);
+    padding: 40px;
+    border-radius: 12px;
+    backdrop-filter: blur(10px);
+}
+
+.mezaninos-applications h3 {
+    color: var(--primary-color);
+    font-size: 26px;
+    margin-bottom: 25px;
+    text-align: center;
+    font-weight: 800;
+}
+
+.mezaninos-applications ul {
+    list-style: none;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 20px;
+}
+
+.mezaninos-applications li {
+    font-size: 16px;
+    color: #c0c0c0;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.mezaninos-applications li i {
+    color: var(--secondary-color);
+    min-width: 24px;
+}
+
+.mezaninos-applications li strong {
+    color: #fff;
+    margin-right: 5px;
+}
+
+/* SEÇÃO: COBERTURAS */
+.coberturas {
+    padding: 120px 60px;
+    background-color: #070709; /* Voltando para o hiper escuro para dar contraste visual nas transições */
+    position: relative;
+    z-index: 20;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+/* Fotos exclusivas para Coberturas */
+.bg-cob-1 { background: url('https://images.unsplash.com/photo-1518458028785-8fbcd101ebb9?auto=format&fit=crop&w=800&q=80') center/cover; }
+.bg-cob-2 { background: url('https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=800&q=80') center/cover; }
+.bg-cob-3 { background: url('https://images.unsplash.com/photo-1503387762-592deb58ef4e?auto=format&fit=crop&w=800&q=80') center/cover; }
+.bg-cob-4 { background: url('https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=800&q=80') center/cover; }
+
+.cob-applications {
+    border-color: rgba(255, 92, 0, 0.2);
+}
+
+/* SEÇÃO: ESCADAS */
+.escadas {
+    padding: 120px 60px;
+    background-color: #0b0b0e; /* Volta para o tom alternado mais leve dos Mezaninos */
+    position: relative;
+    z-index: 20;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+/* Fotos exclusivas para Escadas */
+.bg-esc-1 { background: url('https://images.unsplash.com/photo-1550989460-0adf9ea622e2?auto=format&fit=crop&w=800&q=80') center/cover; }
+.bg-esc-2 { background: url('https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=800&q=80') center/cover; }
+.bg-esc-3 { background: url('https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=800&q=80') center/cover; }
+.bg-esc-4 { background: url('https://images.unsplash.com/photo-1473220464525-4cbd109c00b5?auto=format&fit=crop&w=800&q=80') center/cover; }
+
+.esc-applications {
+    border-color: rgba(255, 92, 0, 0.2);
+}
+
+/* SEÇÃO: PORTÕES E GRADES */
+.portoes {
+    padding: 120px 60px;
+    background-color: #0d0d10; /* Levemente mesclado para transição perfeita de cores profundas */
+    position: relative;
+    z-index: 20;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+/* Fotos para Portões exclusivas (Fachada, Grades, Motores, Pintura) */
+.bg-port-1 { background: url('https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=800&q=80') center/cover; }
+.bg-port-2 { background: url('https://images.unsplash.com/photo-1581373449232-23f4c6e91129?auto=format&fit=crop&w=800&q=80') center/cover; }
+.bg-port-3 { background: url('https://images.unsplash.com/photo-1563207153-f421ca6a4b3e?auto=format&fit=crop&w=800&q=80') center/cover; }
+.bg-port-4 { background: url('https://images.unsplash.com/photo-1502485559092-26154b23d91b?auto=format&fit=crop&w=800&q=80') center/cover; }
+
+.port-applications {
+    border-color: rgba(255, 92, 0, 0.2);
+}
+
+/* SEÇÃO: TELHADOS E DRENAGEM */
+.telhados {
+    padding: 120px 60px;
+    background-color: #070709; /* Voltando ao escudo negro profundo */
+    position: relative;
+    z-index: 20;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.telhados-grid {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: grid;
+    /* Grid de 3 colunas finas */
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 40px;
+    margin-bottom: 60px;
+}
+
+.bg-tel-1 { background: url('https://images.unsplash.com/photo-1558227691-41ea78d1f631?auto=format&fit=crop&w=800&q=80') center/cover; }
+.bg-tel-2 { background: url('https://images.unsplash.com/photo-1621252179027-94459d278660?auto=format&fit=crop&w=800&q=80') center/cover; }
+.bg-tel-3 { background: url('https://images.unsplash.com/photo-1584483766114-2ceaeeafa723?auto=format&fit=crop&w=800&q=80') center/cover; }
+
+.tel-applications {
+    border-color: rgba(255, 92, 0, 0.2);
+}
+
+/* SEÇÃO: RODAPÉ E CONTATOS */
+.footer-section {
+    padding: 100px 60px 30px 60px;
+    background: linear-gradient(180deg, #0a0a0c 0%, #000000 100%);
+    position: relative;
+    z-index: 20;
+    border-top: 3px solid var(--primary-color);
+}
+
+.footer-container {
+    max-width: 1200px;
+    margin: 0 auto 60px auto;
+    display: flex;
+    gap: 80px;
+    flex-wrap: wrap;
+}
+
+.footer-info {
+    flex: 1;
+    min-width: 300px;
+}
+
+.footer-info h2 {
+    font-size: 40px;
+    font-weight: 900;
+    color: #fff;
+    margin-bottom: 15px;
+    line-height: 1.1;
+}
+
+.footer-info p {
+    font-size: 18px;
+    color: #a0a0a0;
+    margin-bottom: 30px;
+    max-width: 400px;
+}
+
+.contact-item {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    margin-bottom: 25px;
+}
+
+.contact-item i {
+    color: var(--primary-color);
+    width: 30px;
+    height: 30px;
+}
+
+.contact-item strong {
+    display: block;
+    color: #fff;
+    font-size: 16px;
+    margin-bottom: 5px;
+}
+
+.contact-item span {
+    color: #a0a0a0;
+    font-size: 15px;
+}
+
+.footer-form {
+    flex: 1;
+    min-width: 350px;
+    background: rgba(255, 255, 255, 0.05); /* Efeito caixa de vidro semitransparente */
+    padding: 40px;
+    border-radius: 12px;
+    border: 1px solid rgba(255, 92, 0, 0.2);
+    backdrop-filter: blur(10px);
+}
+
+.contact-form h3 {
+    color: var(--primary-color);
+    font-size: 24px;
+    margin-bottom: 25px;
+    font-weight: 800;
+}
+
+.contact-form input,
+.contact-form textarea {
+    width: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 15px;
+    border-radius: 6px;
+    color: #fff;
+    font-family: var(--font-family);
+    font-size: 16px;
+    margin-bottom: 15px;
+    transition: border-color 0.3s ease;
+}
+
+.contact-form input:focus,
+.contact-form textarea:focus {
+    outline: none;
+    border-color: var(--primary-color);
+}
+
+.btn-submit {
+    width: 100%;
+    cursor: pointer;
+    font-size: 18px !important;
+    font-weight: 800;
+    text-transform: uppercase;
+    padding: 15px !important;
+    border: none;
+}
+
+/* O Segredo de SEO do Antigravity - Estratégia de Rodapé Oculto/Neutro */
+.footer-seo {
+    max-width: 1200px;
+    margin: 0 auto;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    padding-top: 30px;
+}
+
+.seo-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    margin-bottom: 30px;
+    justify-content: center;
+}
+
+.seo-tags span {
+    background: rgba(255, 255, 255, 0.02);
+    color: #444; /* Cor propositalmente escura/discreta, não polui, mas os robôs do Google leem tudo! */
+    padding: 8px 15px;
+    border-radius: 30px;
+    font-size: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.03);
+    transition: color 0.3s ease;
+}
+
+.seo-tags span:hover {
+    color: var(--primary-color);
+}
+
+.copyright {
+    text-align: center;
+    color: #555;
+    font-size: 14px;
+}
+
+/* Botão Flutuante do WhatsApp */
+.whatsapp-float {
+    position: fixed;
+    width: 60px;
+    height: 60px;
+    bottom: 30px;
+    right: 30px;
+    background-color: #25d366;
+    color: #FFF;
+    border-radius: 50px;
+    text-align: center;
+    font-size: 30px;
+    box-shadow: 0 4px 15px rgba(37, 211, 102, 0.4);
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    animation: pulse-whatsapp 2s infinite;
+}
+
+.whatsapp-float:hover {
+    transform: scale(1.1) translateY(-5px);
+    box-shadow: 0 6px 20px rgba(37, 211, 102, 0.6);
+}
+
+@keyframes pulse-whatsapp {
+    0% {
+        box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.7);
+    }
+    70% {
+        box-shadow: 0 0 0 15px rgba(37, 211, 102, 0);
+    }
+    100% {
+        box-shadow: 0 0 0 0 rgba(37, 211, 102, 0);
+    }
+}
