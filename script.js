@@ -1,112 +1,95 @@
-// ===== 1. LÓGICA DAS FAGULHAS CAINDO =====
-// Esse pedaço do código manipula a tela <canvas> igualzinho como nós pintaríamos num quadro vivo.
+document.addEventListener('DOMContentLoaded', () => {
+    // ===== 1. LÓGICA DAS FAGULHAS CAINDO =====
+    const canvas = document.getElementById('sparksCanvas');
+    const ctx = canvas.getContext('2d');
 
-const canvas = document.getElementById('sparksCanvas');
-const ctx = canvas.getContext('2d'); // Pegamos o "pincel" de desenho estilo 2D
+    let width, height;
+    let sparks = [];
 
-let width, height;
-let sparks = [];
-
-// Função para ajustar o tamanho do nosso quadro ao tamanho exato da tela do usuário
-function resize() {
-    width = window.innerWidth;
-    height = window.innerHeight;
-    canvas.width = width;
-    canvas.height = height;
-}
-
-window.addEventListener('resize', resize);
-resize(); // Chamamos uma vez no começo para configurar tudo
-
-// A nossa 'Fagulha', que vai ser uma gotinha de solda que cai
-class Spark {
-    constructor() {
-        this.reset();
+    function resize() {
+        width = window.innerWidth;
+        height = window.innerHeight;
+        canvas.width = width;
+        canvas.height = height;
     }
 
-    // Função que cria/nasce uma nova fagulha
-    reset() {
-        // Ponto de origem: lado direito, meio/alto da tela (onde ficaria o maçarico / solda do soldador imaginário)
-        this.x = width * 0.85 + (Math.random() * 20 - 10);
-        this.y = height * 0.4 + (Math.random() * 20 - 10);
-        
-        // Empurramos a fagulha para a "Esquerda" e para "Cima" no início, simulando uma explosão
-        this.vx = (Math.random() - 1.2) * (Math.random() * 8 + 3); // Velocidade Horizontal (Eixo X)
-        this.vy = (Math.random() - 0.7) * (Math.random() * 8 + 3); // Velocidade Vertical (Eixo Y)
-        
-        this.life = Math.random() * 80 + 30; // Tempo de vida (quanto mais vida, mais demora a apagar)
-        this.decay = Math.random() * 0.04 + 0.01; // Velocidade que esfria/apaga
-        this.size = Math.random() * 4 + 1.5; // Tamanho inicial da bolinha incandescente
-        this.gravity = 0.25; // Peso dela puxando pro chão
-        
-        // Novas cores: Vermelho, amarelo e laranja
-        const colors = ['#ff0000', '#ff2a00', '#ff9d00', '#ffdf00'];
-        this.color = colors[Math.floor(Math.random() * colors.length)];
-    }
+    // Debounce no resize para evitar reflow forçado excessivo
+    let resizeTimeout;
+    window.addEventListener('resize', () => {
+        clearTimeout(resizeTimeout);
+        resizeTimeout = setTimeout(resize, 200);
+    });
+    resize();
 
-    update() {
-        this.vy += this.gravity; // Aplica gravidade acelerando pra baixo
-        this.x += this.vx; // Move pros lados
-        this.y += this.vy; // Move pro chão
-        
-        this.life -= this.decay * 12; // Esfriando
-        
-        // Bateu no chão da tela?
-        if (this.y > height - 5) {
-            this.vy *= -0.4; // Quica (reduzindo poder)
-            this.vx *= 0.7; // Desliza (reduzindo poder)
-            this.y = height - 5; // Não deixa passar do rodapé
-        }
-
-        // Se esfriou a zero ou ficou menor que pó, "renasce" na solda!
-        if (this.life <= 0 || this.size <= 0.1) {
+    class Spark {
+        constructor() {
             this.reset();
         }
+
+        reset() {
+            this.x = width * 0.85 + (Math.random() * 20 - 10);
+            this.y = height * 0.4 + (Math.random() * 20 - 10);
+            this.vx = (Math.random() - 1.2) * (Math.random() * 8 + 3);
+            this.vy = (Math.random() - 0.7) * (Math.random() * 8 + 3);
+            this.life = Math.random() * 80 + 30;
+            this.decay = Math.random() * 0.04 + 0.01;
+            this.size = Math.random() * 4 + 1.5;
+            this.gravity = 0.25;
+            const colors = ['#ff0000', '#ff2a00', '#ff9d00', '#ffdf00'];
+            this.color = colors[Math.floor(Math.random() * colors.length)];
+        }
+
+        update() {
+            this.vy += this.gravity;
+            this.x += this.vx;
+            this.y += this.vy;
+            this.life -= this.decay * 12;
+            
+            if (this.y > height - 5) {
+                this.vy *= -0.4;
+                this.vx *= 0.7;
+                this.y = height - 5;
+            }
+
+            if (this.life <= 0 || this.size <= 0.1) {
+                this.reset();
+            }
+        }
+
+        draw() {
+            ctx.beginPath();
+            ctx.arc(this.x, this.y, Math.max(0.1, this.size * (this.life / 100)), 0, Math.PI * 2);
+            ctx.fillStyle = this.color;
+            
+            // Otimização de Performance: Só aplica sombra se a partícula for grande/quente
+            if (this.life > 50) {
+                ctx.shadowBlur = 5;
+                ctx.shadowColor = this.color;
+            }
+            
+            ctx.fill();
+            ctx.closePath();
+            ctx.shadowBlur = 0;
+        }
     }
 
-    // Desenha na tela (nossa pintura de um frame)
-    draw() {
-        ctx.beginPath();
-        // Desenha uma bolinha cujo tamanho diminui junto com a "vida"
-        ctx.arc(this.x, this.y, Math.max(0.1, this.size * (this.life / 100)), 0, Math.PI * 2);
-        ctx.fillStyle = this.color;
-        
-        // O truque da solda: Efeito de Brilho em volta da bolinha (Glow) ajustado para economia de GPU
-        ctx.shadowBlur = 5;
-        ctx.shadowColor = this.color;
-        
-        ctx.fill();
-        ctx.closePath();
-        
-        // Limpa a sombra para o próximo desenho não ter blur
-        ctx.shadowBlur = 0;
+    for (let i = 0; i < 40; i++) {
+        sparks.push(new Spark());
     }
-}
 
-// Vamos gerar "pedacinhos" ativos de fagulhas rolando ao mesmo tempo (reduzido de 150 para 40 para acabar com o travamento)
-for (let i = 0; i < 40; i++) {
-    sparks.push(new Spark());
-}
+    function animate() {
+        ctx.fillStyle = 'rgba(43, 45, 49, 0.4)';
+        ctx.fillRect(0, 0, width, height);
 
-// O motorzinho que fica redesenhando tudo super rápido (60x por segundo)
-function animate() {
-    // Ao invés de apagar tudo do frame passado, cobrimos com cinza chumbo semitransparente.
-    // Isso cria um rastro de "rasgo" na luz lindo atrás das fagulhas!
-    ctx.fillStyle = 'rgba(43, 45, 49, 0.4)';
-    ctx.fillRect(0, 0, width, height);
+        sparks.forEach(spark => {
+            spark.update();
+            spark.draw();
+        });
 
-    // Manda atualizar a matemática e desenhar cada partícula
-    sparks.forEach(spark => {
-        spark.update();
-        spark.draw();
-    });
+        requestAnimationFrame(animate); 
+    }
 
-    // Pede ao navegador para chamar `animate` no próximo milissegundo livre
-    requestAnimationFrame(animate); 
-}
-
-// Dá a partida na animação das faíscas!
-animate();
+    animate();
 
 
 // ===== 2. GSAP: ANIMAÇÕES DE ENTRADA SUAVES DO TEXTO =====
@@ -373,7 +356,8 @@ gsap.from('.footer-container > div', {
 // Inicializa os ícones vetoriais em alta qualidade SVG de todo o site (Galpões, Mezaninos, Coberturas, Telhados, Rodapé)
 lucide.createIcons();
 
-// Força o GSAP a recalcular todas as alturas da página (Garante que os cards não sumam ao dar F5 no meio do site!)
-setTimeout(() => {
-    ScrollTrigger.refresh();
-}, 500);
+    // Força o GSAP a recalcular todas as alturas da página
+    setTimeout(() => {
+        ScrollTrigger.refresh();
+    }, 500);
+});

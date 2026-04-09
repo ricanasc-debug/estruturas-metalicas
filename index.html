@@ -5,23 +5,26 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PBrandino Estruturas Metálicas</title>
     <meta name="description" content="Especialistas em construção e montagem de estruturas metálicas de alta performance.">
+    <meta name="theme-color" content="#fca311">
     <link rel="stylesheet" href="style.css">
     
-    <!-- Fonte moderna e forte do Google Fonts (Outfit) -->
+    <!-- Pré-conexão para carregamento de fontes mais rápido -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;500;800;900&display=swap" rel="stylesheet">
     
-    <!-- GSAP: Biblioteca para criar animações de entrada suaves -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <!-- GSAP: Biblioteca para criar animações de entrada suaves (Deferido para performance) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js" defer></script>
     <!-- Vanilla Tilt para o efeito 3D nos cartões ao passar o mouse -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.8.0/vanilla-tilt.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.8.0/vanilla-tilt.min.js" defer></script>
     
-    <!-- Swiper JS e CSS para o Carrossel Infinito -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.css" />
-    <script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js"></script>
+    <!-- Swiper JS e CSS (Carregamento não-bloqueante para CSS) -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.css" media="print" onload="this.media='all'" />
+    <script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js" defer></script>
     
-    <!-- Lucide Icons (Ícones modernos padrão do mercado) -->
-    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest" defer></script>
 </head>
 <body>
     <!-- Esta tag "canvas" é a tela de pintura invisível onde o JavaScript vai desenhar nossas fagulhas -->
@@ -137,7 +140,7 @@
                     <span class="stars">★★★★★</span>
                 </div>
                 <div class="g-reviews-text">
-                    <a href="https://www.google.com/search?q=pbrandino+estruturas+metalicas+perto+de+mim" target="_blank">4 avaliações no Google</a>
+                    <a href="https://www.google.com/search?q=pbrandino+estruturas+metalicas+perto+de+mim" target="_blank" rel="noopener">4 avaliações no Google</a>
                 </div>
             </div>
         </div>
@@ -267,6 +270,6 @@
     </a>
 
     <!-- O nosso script que controla as animações -->
-    <script src="script.js"></script>
+    <script src="script.js" defer></script>
 </body>
 </html>
